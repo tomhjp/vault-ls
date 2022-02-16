@@ -8,6 +8,9 @@ import (
 
 var (
 	AgentSchema = &schema.BodySchema{
+		DocsLink: &schema.DocsLink{
+			URL: "https://www.vaultproject.io/docs/agent#configuration",
+		},
 		Blocks: map[string]*schema.BlockSchema{
 			"auto_auth":       autoAuthBlockSchema,
 			"cache":           cacheBlockSchema,
@@ -32,18 +35,12 @@ var (
 	}
 
 	autoAuthBlockSchema = &schema.BlockSchema{
-		// Address: &schema.BlockAddrSchema{
-		// 	Steps: []schema.AddrStep{
-		// 		schema.LabelStep{Index: 0},
-		// 		schema.AttrValueStep{Name: "alias", IsOptional: true},
-		// 	},
-		// 	FriendlyName: "provider",
-		// 	ScopeId:      refscope.ProviderScope,
-		// 	AsReference:  true,
-		// },
 		Description: lang.PlainText("An auto_auth block is used to specify the auth method Agent should use to authenticate with Vault"),
 		MaxItems:    1,
 		Body: &schema.BodySchema{
+			DocsLink: &schema.DocsLink{
+				URL: "https://www.vaultproject.io/docs/agent/autoauth#configuration",
+			},
 			Blocks: map[string]*schema.BlockSchema{
 				"method": {
 					Labels: []*schema.LabelSchema{
@@ -56,6 +53,9 @@ var (
 					MinItems: 1,
 					MaxItems: 1,
 					Body: &schema.BodySchema{
+						DocsLink: &schema.DocsLink{
+							URL: "https://www.vaultproject.io/docs/agent/autoauth#configuration-method",
+						},
 						Attributes: map[string]*schema.AttributeSchema{
 							"mount_path": {
 								Expr: schema.LiteralTypeOnly(cty.String),
@@ -77,6 +77,9 @@ var (
 								{Index: 0, Value: "alicloud"},
 							},
 						}): {
+							DocsLink: &schema.DocsLink{
+								URL: "https://www.vaultproject.io/docs/agent/autoauth/methods/alicloud#configuration",
+							},
 							Blocks: map[string]*schema.BlockSchema{
 								"config": {
 									Body: &schema.BodySchema{
@@ -102,6 +105,9 @@ var (
 								{Index: 0, Value: "approle"},
 							},
 						}): {
+							DocsLink: &schema.DocsLink{
+								URL: "https://www.vaultproject.io/docs/agent/autoauth/methods/approle#configuration",
+							},
 							Blocks: map[string]*schema.BlockSchema{
 								"config": {
 									Body: &schema.BodySchema{
@@ -130,6 +136,9 @@ var (
 								{Index: 0, Value: "aws"},
 							},
 						}): {
+							DocsLink: &schema.DocsLink{
+								URL: "https://www.vaultproject.io/docs/agent/autoauth/methods/aws#configuration",
+							},
 							Blocks: map[string]*schema.BlockSchema{
 								"config": {
 									Body: &schema.BodySchema{
@@ -173,6 +182,9 @@ var (
 								{Index: 0, Value: "azure"},
 							},
 						}): {
+							DocsLink: &schema.DocsLink{
+								URL: "https://www.vaultproject.io/docs/agent/autoauth/methods/azure#configuration",
+							},
 							Blocks: map[string]*schema.BlockSchema{
 								"config": {
 									Body: &schema.BodySchema{
@@ -195,6 +207,9 @@ var (
 								{Index: 0, Value: "cert"},
 							},
 						}): {
+							DocsLink: &schema.DocsLink{
+								URL: "https://www.vaultproject.io/docs/agent/autoauth/methods/cert#configuration",
+							},
 							Blocks: map[string]*schema.BlockSchema{
 								"config": {
 									Body: &schema.BodySchema{
@@ -223,6 +238,9 @@ var (
 								{Index: 0, Value: "cf"},
 							},
 						}): {
+							DocsLink: &schema.DocsLink{
+								URL: "https://www.vaultproject.io/docs/agent/autoauth/methods/cf#configuration",
+							},
 							Blocks: map[string]*schema.BlockSchema{
 								"config": {
 									Body: &schema.BodySchema{
@@ -242,6 +260,9 @@ var (
 								{Index: 0, Value: "gcp"},
 							},
 						}): {
+							DocsLink: &schema.DocsLink{
+								URL: "https://www.vaultproject.io/docs/agent/autoauth/methods/gcp#configuration",
+							},
 							Blocks: map[string]*schema.BlockSchema{
 								"config": {
 									Body: &schema.BodySchema{
@@ -273,6 +294,9 @@ var (
 								{Index: 0, Value: "jwt"},
 							},
 						}): {
+							DocsLink: &schema.DocsLink{
+								URL: "https://www.vaultproject.io/docs/agent/autoauth/methods/jwt#configuration",
+							},
 							Blocks: map[string]*schema.BlockSchema{
 								"config": {
 									Body: &schema.BodySchema{
@@ -295,6 +319,9 @@ var (
 								{Index: 0, Value: "kerberos"},
 							},
 						}): {
+							DocsLink: &schema.DocsLink{
+								URL: "https://www.vaultproject.io/docs/agent/autoauth/methods/kerberos#configuration",
+							},
 							Blocks: map[string]*schema.BlockSchema{
 								"config": {
 									Body: &schema.BodySchema{
@@ -329,6 +356,9 @@ var (
 								{Index: 0, Value: "kubernetes"},
 							},
 						}): {
+							DocsLink: &schema.DocsLink{
+								URL: "https://www.vaultproject.io/docs/agent/autoauth/methods/kubernetes#configuration",
+							},
 							Blocks: map[string]*schema.BlockSchema{
 								"config": {
 									Body: &schema.BodySchema{
@@ -365,6 +395,9 @@ var (
 							Blocks: map[string]*schema.BlockSchema{
 								"config": {
 									Body: &schema.BodySchema{
+										DocsLink: &schema.DocsLink{
+											URL: "https://www.vaultproject.io/docs/agent/autoauth/sinks/file#configuration",
+										},
 										Attributes: map[string]*schema.AttributeSchema{
 											"path": {
 												Expr: schema.LiteralTypeOnly(cty.String),
@@ -381,6 +414,9 @@ var (
 						},
 					},
 					Body: &schema.BodySchema{
+						DocsLink: &schema.DocsLink{
+							URL: "https://www.vaultproject.io/docs/agent/autoauth#configuration-sinks",
+						},
 						Attributes: map[string]*schema.AttributeSchema{
 							"wrap_ttl": {
 								Expr: schema.LiteralTypeOnly(cty.String),
@@ -450,6 +486,9 @@ var (
 	cacheBlockSchema = &schema.BlockSchema{
 		MaxItems: 1,
 		Body: &schema.BodySchema{
+			DocsLink: &schema.DocsLink{
+				URL: "https://www.vaultproject.io/docs/agent/caching#configuration-cache",
+			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"use_auto_auth_token": {
 					Expr: schema.LiteralTypeOnly(cty.Bool),
@@ -476,6 +515,9 @@ var (
 								{Index: 0, Value: "kubernetes"},
 							},
 						}): {
+							DocsLink: &schema.DocsLink{
+								URL: "https://www.vaultproject.io/docs/agent/caching#configuration-persist",
+							},
 							Attributes: map[string]*schema.AttributeSchema{
 								"path": {
 									Expr: schema.LiteralTypeOnly(cty.String),
@@ -496,6 +538,9 @@ var (
 	vaultBlockSchema = &schema.BlockSchema{
 		MaxItems: 1,
 		Body: &schema.BodySchema{
+			DocsLink: &schema.DocsLink{
+				URL: "https://www.vaultproject.io/docs/agent#vault-stanza",
+			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"address": {
 					Expr: schema.LiteralTypeOnly(cty.String),
@@ -535,6 +580,9 @@ var (
 	templateConfigBlockSchema = &schema.BlockSchema{
 		MaxItems: 1,
 		Body: &schema.BodySchema{
+			DocsLink: &schema.DocsLink{
+				URL: "https://www.vaultproject.io/docs/agent/template-config#configuration",
+			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"exit_on_retry_failure": {
 					Expr: schema.LiteralTypeOnly(cty.Bool),
@@ -547,6 +595,9 @@ var (
 	}
 	templateBlockSchema = &schema.BlockSchema{
 		Body: &schema.BodySchema{
+			DocsLink: &schema.DocsLink{
+				URL: "https://www.vaultproject.io/docs/agent/template#configuration",
+			},
 			Attributes: map[string]*schema.AttributeSchema{
 				"source": {
 					Expr: schema.LiteralTypeOnly(cty.String),
@@ -586,118 +637,6 @@ var (
 				},
 				"wait": {
 					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-			},
-		},
-	}
-	listenerBlockSchema = &schema.BlockSchema{
-		Labels: []*schema.LabelSchema{
-			{
-				Name:        "type",
-				IsDepKey:    true,
-				Completable: true,
-			},
-		},
-		Body: &schema.BodySchema{
-			Attributes: map[string]*schema.AttributeSchema{
-				"address": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"cluster_address": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"http_idle_timeout": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"http_read_header_timeout": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"http_read_timeout": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"http_write_timeout": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"max_request_size": {
-					Expr: schema.LiteralTypeOnly(cty.Number),
-				},
-				"max_request_duration": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"proxy_protocol_behavior": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"proxy_protocol_authorized_addrs": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"tls_disable": {
-					Expr: schema.LiteralTypeOnly(cty.String), // TODO: docs say string??
-				},
-				"tls_cert_file": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"tls_key_file": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"tls_min_version": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"tls_cipher_suites": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"tls_prefer_server_cipher_suites": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"tls_require_and_verify_client_cert": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"tls_client_ca_file": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"tls_disable_client_certs": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"x_forwarded_for_authorized_addrs": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"x_forwarded_for_hop_skips": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"x_forwarded_for_reject_not_authorized": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-				"x_forwarded_for_reject_not_present": {
-					Expr: schema.LiteralTypeOnly(cty.String),
-				},
-			},
-			Blocks: map[string]*schema.BlockSchema{
-				"telemetry": {
-					Body: &schema.BodySchema{
-						Attributes: map[string]*schema.AttributeSchema{
-							"unauthenticated_metrics_access": {
-								Expr: schema.LiteralTypeOnly(cty.Bool),
-							},
-						},
-					},
-				},
-				"profiling": {
-					Body: &schema.BodySchema{
-						Attributes: map[string]*schema.AttributeSchema{
-							"unauthenticated_pprof_access": {
-								Expr: schema.LiteralTypeOnly(cty.Bool),
-							},
-						},
-					},
-				},
-				"custom_response_headers": {
-					Body: &schema.BodySchema{
-						Attributes: map[string]*schema.AttributeSchema{
-							"default": {
-								// Expr: schema.MapExpr(), //TODO: type is a map
-							},
-							// TODO: Aribtrary status code keys
-						},
-					},
 				},
 			},
 		},
