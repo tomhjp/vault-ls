@@ -4,10 +4,9 @@ import (
 	"encoding/json"
 	"flag"
 	"fmt"
+	"os"
 	"runtime"
 	"strings"
-
-	"github.com/mitchellh/cli"
 )
 
 type VersionOutput struct {
@@ -17,7 +16,6 @@ type VersionOutput struct {
 }
 
 type VersionCommand struct {
-	Ui      cli.Ui
 	Version string
 
 	jsonOutput bool
@@ -35,16 +33,17 @@ func (c *VersionCommand) flags() *flag.FlagSet {
 
 	fs.BoolVar(&c.jsonOutput, "json", false, "output the version information as a JSON object")
 
-	fs.Usage = func() { c.Ui.Error(c.Help()) }
+	fs.Usage = func() {
+		_, _ = fmt.Fprint(os.Stdout, c.Help())
+	}
 
 	return fs
 }
 
-func (c *VersionCommand) Run(args []string) int {
+func (c *VersionCommand) Run(args []string) error {
 	f := c.flags()
 	if err := f.Parse(args); err != nil {
-		c.Ui.Error(fmt.Sprintf("Error parsing command-line flags: %s", err))
-		return 1
+		return fmt.Errorf("Error parsing command-line flags: %s", err)
 	}
 
 	output := VersionOutput{
@@ -60,16 +59,15 @@ func (c *VersionCommand) Run(args []string) int {
 	if c.jsonOutput {
 		jsonOutput, err := json.MarshalIndent(output, "", "  ")
 		if err != nil {
-			c.Ui.Error(fmt.Sprintf("\nError marshalling JSON: %s", err))
-			return 1
+			return fmt.Errorf("\nError marshalling JSON: %s", err)
 		}
-		c.Ui.Output(string(jsonOutput))
-		return 0
+		_, _ = fmt.Fprint(os.Stdout, jsonOutput)
+		return nil
 	}
 
 	ver := fmt.Sprintf("%s\nplatform: %s/%s\ngo: %s\ncompiler: %s", c.Version, output.GoOS, output.GoArch, output.GoVersion, output.Compiler)
-	c.Ui.Output(ver)
-	return 0
+	_, _ = fmt.Fprint(os.Stdout, ver)
+	return nil
 }
 
 func (c *VersionCommand) Help() string {

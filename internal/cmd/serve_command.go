@@ -11,7 +11,6 @@ import (
 	"strings"
 	"syscall"
 
-	"github.com/mitchellh/cli"
 	lsctx "github.com/tomhjp/vault-ls/internal/context"
 	"github.com/tomhjp/vault-ls/internal/langserver"
 	"github.com/tomhjp/vault-ls/internal/langserver/handlers"
@@ -20,7 +19,6 @@ import (
 )
 
 type ServeCommand struct {
-	Ui      cli.Ui
 	Version string
 
 	// flags
@@ -46,24 +44,24 @@ func (c *ServeCommand) flags() *flag.FlagSet {
 	fs.IntVar(&c.reqConcurrency, "req-concurrency", 0, fmt.Sprintf("number of RPC requests to process concurrently,"+
 		" defaults to %d, concurrency lower than 2 is not recommended", langserver.DefaultConcurrency()))
 
-	fs.Usage = func() { c.Ui.Error(c.Help()) }
+	fs.Usage = func() {
+		_, _ = fmt.Fprint(os.Stdout, c.Help())
+	}
 
 	return fs
 }
 
-func (c *ServeCommand) Run(args []string) int {
+func (c *ServeCommand) Run(args []string) error {
 	f := c.flags()
 	if err := f.Parse(args); err != nil {
-		c.Ui.Error(fmt.Sprintf("Error parsing command-line flags: %s", err))
-		return 1
+		return fmt.Errorf("Error parsing command-line flags: %s", err)
 	}
 
 	if c.cpuProfile != "" {
 		stop, err := writeCpuProfileInto(c.cpuProfile)
 		defer stop()
 		if err != nil {
-			c.Ui.Error(err.Error())
-			return 1
+			return err
 		}
 	}
 
@@ -75,8 +73,7 @@ func (c *ServeCommand) Run(args []string) int {
 	if c.logFilePath != "" {
 		fl, err := logging.NewFileLogger(c.logFilePath)
 		if err != nil {
-			c.Ui.Error(fmt.Sprintf("Failed to setup file logging: %s", err))
-			return 1
+			return fmt.Errorf("Failed to setup file logging: %s", err)
 		}
 		defer fl.Close()
 
@@ -104,19 +101,17 @@ func (c *ServeCommand) Run(args []string) int {
 	if c.port != 0 {
 		err := srv.StartTCP(fmt.Sprintf("localhost:%d", c.port))
 		if err != nil {
-			c.Ui.Error(fmt.Sprintf("Failed to start TCP server: %s", err))
-			return 1
+			return fmt.Errorf("Failed to start TCP server: %s", err)
 		}
-		return 0
+		return nil
 	}
 
 	err := srv.StartAndWait(os.Stdin, os.Stdout)
 	if err != nil {
-		c.Ui.Error(fmt.Sprintf("Failed to start server: %s", err))
-		return 1
+		return fmt.Errorf("Failed to start server: %s", err)
 	}
 
-	return 0
+	return nil
 }
 
 type stopFunc func() error
