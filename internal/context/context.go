@@ -17,8 +17,6 @@ func (k *contextKey) String() string {
 
 var (
 	ctxDs                   = &contextKey{"document storage"}
-	ctxRootDir              = &contextKey{"root directory"}
-	ctxCommandPrefix        = &contextKey{"command prefix"}
 	ctxLsVersion            = &contextKey{"language server version"}
 	ctxProgressToken        = &contextKey{"progress token"}
 	ctxExperimentalFeatures = &contextKey{"experimental features"}
@@ -39,50 +37,6 @@ func DocumentStorage(ctx context.Context) (filesystem.DocumentStorage, error) {
 	}
 
 	return fs, nil
-}
-
-func WithRootDirectory(ctx context.Context, dir *string) context.Context {
-	return context.WithValue(ctx, ctxRootDir, dir)
-}
-
-func SetRootDirectory(ctx context.Context, dir string) error {
-	rootDir, ok := ctx.Value(ctxRootDir).(*string)
-	if !ok {
-		return missingContextErr(ctxRootDir)
-	}
-
-	*rootDir = dir
-	return nil
-}
-
-func RootDirectory(ctx context.Context) (string, bool) {
-	rootDir, ok := ctx.Value(ctxRootDir).(*string)
-	if !ok {
-		return "", false
-	}
-	return *rootDir, true
-}
-
-func WithCommandPrefix(ctx context.Context, prefix *string) context.Context {
-	return context.WithValue(ctx, ctxCommandPrefix, prefix)
-}
-
-func SetCommandPrefix(ctx context.Context, prefix string) error {
-	commandPrefix, ok := ctx.Value(ctxCommandPrefix).(*string)
-	if !ok {
-		return missingContextErr(ctxCommandPrefix)
-	}
-
-	*commandPrefix = prefix
-	return nil
-}
-
-func CommandPrefix(ctx context.Context) (string, bool) {
-	commandPrefix, ok := ctx.Value(ctxCommandPrefix).(*string)
-	if !ok {
-		return "", false
-	}
-	return *commandPrefix, true
 }
 
 func WithLanguageServerVersion(ctx context.Context, version string) context.Context {

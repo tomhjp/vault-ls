@@ -43,6 +43,14 @@ func textEdit(te lang.TextEdit, snippetSupport bool) *lsp.TextEdit {
 	}
 }
 
+func insertText(te lang.TextEdit, snippetSupport bool) string {
+	if snippetSupport {
+		return te.Snippet
+	}
+
+	return te.NewText
+}
+
 func insertTextFormat(snippetSupport bool) lsp.InsertTextFormat {
 	if snippetSupport {
 		return lsp.SnippetTextFormat

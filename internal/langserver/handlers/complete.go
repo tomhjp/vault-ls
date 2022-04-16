@@ -2,13 +2,14 @@ package handlers
 
 import (
 	"context"
+	"fmt"
 
 	lsctx "github.com/tomhjp/vault-ls/internal/context"
 	ilsp "github.com/tomhjp/vault-ls/internal/lsp"
 	lsp "github.com/tomhjp/vault-ls/internal/protocol"
 )
 
-func (svc *service) TextDocumentComplete(ctx context.Context, params lsp.CompletionParams) (lsp.CompletionList, error) {
+func TextDocumentComplete(ctx context.Context, params lsp.CompletionParams) (lsp.CompletionList, error) {
 	var list lsp.CompletionList
 
 	fs, err := lsctx.DocumentStorage(ctx)
@@ -26,7 +27,7 @@ func (svc *service) TextDocumentComplete(ctx context.Context, params lsp.Complet
 		return list, err
 	}
 
-	decoder, err := svc.decoderForDocument(doc)
+	decoder, err := decoderForDocument(ctx, doc)
 	if err != nil {
 		return list, err
 	}
@@ -36,8 +37,8 @@ func (svc *service) TextDocumentComplete(ctx context.Context, params lsp.Complet
 		return list, err
 	}
 
-	svc.logger.Printf("Looking for candidates at %q -> %#v", doc.Filename(), fPos.Position())
+	fmt.Printf("Looking for candidates at %q -> %#v\n", doc.Filename(), fPos.Position())
 	candidates, err := decoder.CandidatesAtPos(doc.Filename(), fPos.Position())
-	svc.logger.Printf("received candidates: %#v", candidates)
+	fmt.Printf("received candidates: %#v\n", candidates)
 	return ilsp.ToCompletionList(candidates, clientCaps.TextDocument), err
 }

@@ -68,9 +68,14 @@ func toCompletionItem(candidate lang.Candidate, caps lsp.CompletionClientCapabil
 		InsertTextFormat:    insertTextFormat(snippetSupport),
 		Detail:              candidate.Detail,
 		Documentation:       doc,
-		TextEdit:            textEdit(candidate.TextEdit, snippetSupport),
 		Command:             cmd,
 		AdditionalTextEdits: textEdits(candidate.AdditionalTextEdits, snippetSupport),
+	}
+
+	if caps.CompletionItem.InsertReplaceSupport {
+		item.TextEdit = textEdit(candidate.TextEdit, snippetSupport)
+	} else {
+		item.InsertText = insertText(candidate.TextEdit, snippetSupport)
 	}
 
 	if caps.CompletionItem.DeprecatedSupport {

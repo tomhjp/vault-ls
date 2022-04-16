@@ -30,7 +30,6 @@ type service struct {
 
 	fs      filesystem.Filesystem
 	decoder *decoder.Decoder
-	server  session.Server
 
 	additionalHandlers map[string]rpch.Func
 }
@@ -68,11 +67,8 @@ func (svc *service) Assigner() (jrpc2.Assigner, error) {
 
 	svc.fs.SetLogger(svc.logger)
 
-	lh := LogHandler(svc.logger)
 	cc := &lsp.ClientCapabilities{}
 
-	rootDir := ""
-	commandPrefix := ""
 	clientName := ""
 
 	m := map[string]rpch.Func{
@@ -83,8 +79,6 @@ func (svc *service) Assigner() (jrpc2.Assigner, error) {
 			}
 
 			ctx = ilsp.WithClientCapabilities(ctx, cc)
-			ctx = lsctx.WithRootDirectory(ctx, &rootDir)
-			ctx = lsctx.WithCommandPrefix(ctx, &commandPrefix)
 			ctx = ilsp.ContextWithClientName(ctx, &clientName)
 			ctx = lsctx.WithDocumentStorage(ctx, svc.fs)
 
@@ -93,7 +87,7 @@ func (svc *service) Assigner() (jrpc2.Assigner, error) {
 				ctx = lsctx.WithLanguageServerVersion(ctx, version)
 			}
 
-			return handle(ctx, req, svc.Initialize)
+			return handle(ctx, req, Initialize)
 		},
 		"initialized": func(ctx context.Context, req *jrpc2.Request) (interface{}, error) {
 			err := session.ConfirmInitialization(req)
@@ -117,7 +111,7 @@ func (svc *service) Assigner() (jrpc2.Assigner, error) {
 				return nil, err
 			}
 			ctx = lsctx.WithDocumentStorage(ctx, svc.fs)
-			return handle(ctx, req, lh.TextDocumentDidOpen)
+			return handle(ctx, req, TextDocumentDidOpen)
 		},
 		"textDocument/didClose": func(ctx context.Context, req *jrpc2.Request) (interface{}, error) {
 			err := session.CheckInitializationIsConfirmed()
@@ -136,7 +130,7 @@ func (svc *service) Assigner() (jrpc2.Assigner, error) {
 			ctx = lsctx.WithDocumentStorage(ctx, svc.fs)
 			ctx = ilsp.WithClientCapabilities(ctx, cc)
 
-			return handle(ctx, req, svc.TextDocumentComplete)
+			return handle(ctx, req, TextDocumentComplete)
 		},
 		"shutdown": func(ctx context.Context, req *jrpc2.Request) (interface{}, error) {
 			err := session.Shutdown(req)
@@ -144,7 +138,6 @@ func (svc *service) Assigner() (jrpc2.Assigner, error) {
 				return nil, err
 			}
 			ctx = lsctx.WithDocumentStorage(ctx, svc.fs)
-			svc.shutdown()
 			return handle(ctx, req, Shutdown)
 		},
 		"exit": func(ctx context.Context, req *jrpc2.Request) (interface{}, error) {
@@ -177,28 +170,12 @@ func (svc *service) Assigner() (jrpc2.Assigner, error) {
 	return convertMap(m), nil
 }
 
-func (svc *service) configureSessionDependencies(ctx context.Context) error {
-	fs, err := lsctx.DocumentStorage(ctx)
-	if err != nil {
-		return err
-	}
-	svc.decoder = idecoder.NewDecoder(ctx, &idecoder.PathReader{
-		FS: fs,
-	})
-
-	return nil
-}
-
 func (svc *service) Finish(_ jrpc2.Assigner, status jrpc2.ServerStatus) {
 	if status.Closed || status.Err != nil {
 		svc.logger.Printf("session stopped unexpectedly (err: %v)", status.Err)
 	}
 
-	svc.shutdown()
 	svc.stopSession()
-}
-
-func (svc *service) shutdown() {
 }
 
 // convertMap is a helper function allowing us to omit the jrpc2.Func
@@ -225,8 +202,16 @@ func handle(ctx context.Context, req *jrpc2.Request, fn interface{}) (interface{
 	return result, err
 }
 
-func (svc *service) decoderForDocument(doc filesystem.Document) (*decoder.PathDecoder, error) {
-	return svc.decoder.Path(lang.Path{
+func decoderForDocument(ctx context.Context, doc filesystem.Document) (*decoder.PathDecoder, error) {
+	fs, err := lsctx.DocumentStorage(ctx)
+	if err != nil {
+		return nil, err
+	}
+	decoder := idecoder.NewDecoder(ctx, &idecoder.PathReader{
+		FS: fs,
+	})
+
+	return decoder.Path(lang.Path{
 		Path:       doc.FullPath(),
 		LanguageID: doc.LanguageID(),
 	})

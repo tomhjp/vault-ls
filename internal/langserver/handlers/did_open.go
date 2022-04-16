@@ -8,7 +8,7 @@ import (
 	lsp "github.com/tomhjp/vault-ls/internal/protocol"
 )
 
-func (lh *logHandler) TextDocumentDidOpen(ctx context.Context, params lsp.DidOpenTextDocumentParams) error {
+func TextDocumentDidOpen(ctx context.Context, params lsp.DidOpenTextDocumentParams) error {
 	fs, err := lsctx.DocumentStorage(ctx)
 	if err != nil {
 		return err

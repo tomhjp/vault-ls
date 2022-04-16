@@ -1,0 +1,9 @@
+{
+    "scopeName": "source.hcl.vault",
+    "name": "HashiCorp Vault",
+    "uuid": "d9db10d3-db70-48aa-8d44-f96ccbaa29f3",
+    "fileTypes": ["vlt.hcl", "agent.vlt.hcl", "policy.vlt.hcl", "vault-agent"],
+    "patterns": [
+      { "include": "source.hcl" }
+    ]
+}

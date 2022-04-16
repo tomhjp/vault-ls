@@ -41,8 +41,7 @@ func parseUri(uri string) (string, error) {
 	}
 
 	if u.Scheme != "file" {
-		return "", fmt.Errorf("unexpected scheme %q in URI %q",
-			u.Scheme, uri)
+		return "", fmt.Errorf("unexpected scheme %q in URI %q", u.Scheme, uri)
 	}
 
 	return url.PathUnescape(u.Path)
