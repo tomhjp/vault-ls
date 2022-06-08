@@ -9,7 +9,6 @@ export default defineConfig({
                 main: path.resolve(__dirname, 'index.html'),
             },
         },
-        outDir: "../docs",
         commonjsOptions: {
             include: [/node_modules/]
         }

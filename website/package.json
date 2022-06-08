@@ -18,8 +18,8 @@
   "scripts": {
     "compile": "tsc",
     "dev": "vite --debug --force",
-    "build:wasm": "GOOS=js GOARCH=wasm go build -o ../docs/vault-ls.wasm ..",
-    "copy": "shx cp wasm_exec.js ../docs/",
-    "build": "vite build && npm run copy"
+    "build:wasm": "GOOS=js GOARCH=wasm go build -o dist/vault-ls.wasm ..",
+    "copy": "shx cp wasm_exec.js dist/",
+    "build": "vite build && npm run build:wasm && npm run copy"
   }
 }
