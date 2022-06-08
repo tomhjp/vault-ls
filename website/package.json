@@ -1,0 +1,25 @@
+{
+  "private": true,
+  "name": "vault-config",
+  "version": "0.1.0",
+  "devDependencies": {
+    "shx": "^0.3.4",
+    "typescript": "^4.6.2",
+    "vite": "2.9.6"
+  },
+  "dependencies": {
+    "file-loader": "^4.3.0",
+    "monaco-editor": "^0.33.0",
+    "monaco-editor-textmate": "^3.0.0",
+    "monaco-textmate": "^3.0.1",
+    "onigasm": "^2.2.5",
+    "vscode-languageserver-types": "^3.16.0"
+  },
+  "scripts": {
+    "compile": "tsc",
+    "dev": "vite --debug --force",
+    "build:wasm": "GOOS=js GOARCH=wasm go build -o ../docs/vault-ls.wasm ..",
+    "copy": "shx cp wasm_exec.js ../docs/",
+    "build": "vite build && npm run build:wasm && npm run copy"
+  }
+}

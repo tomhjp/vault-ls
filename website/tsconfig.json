@@ -1,0 +1,11 @@
+{
+    "compilerOptions": {
+        "rootDir": ".",
+        "outDir": "lib",
+        // Required for wasm_exec.js
+        "allowJs": true,
+    },
+    "include": [
+        ".",
+    ],
+}
