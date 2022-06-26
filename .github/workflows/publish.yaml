@@ -1,0 +1,31 @@
+name: publish
+on: push
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-go@v2
+        with:
+          go-version: "1.18.3"
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.cache/go-build
+            ~/go/pkg/mod
+          key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+          restore-keys: |
+            ${{ runner.os }}-go-
+      - name: build
+        env:
+          GOOS: js
+          GOARCH: wasm
+        run: go build -o vault-ls.wasm .
+      - name: upload
+        env:
+          AWS_EC2_METADATA_DISABLED: true
+          AWS_DEFAULT_REGION: auto
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        run: aws s3api put-object --endpoint-url https://${{ secrets.CLOUDFLARE_ACCOUNT_ID }}.r2.cloudflarestorage.com --bucket vault-ls --key vault-ls.wasm --body vault-ls.wasm
