@@ -3,6 +3,8 @@
 A language server to help write HashiCorp [Vault](https://vaultproject.io)
 configuration files.
 
+Try it in your browser at https://vault-ls.pages.dev/
+
 ## Disclaimer
 
 This is a personal project and incomplete. It's not fit for production usage.
