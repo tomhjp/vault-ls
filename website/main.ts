@@ -17,7 +17,7 @@ pid_file = "./pidfile"
 
 `;
 
-loadGolangWASM("vault-ls.wasm").then(async () => {
+loadGolangWASM("https://vault-ls-bucket.tomhjp.workers.dev/vault-ls.wasm").then(async () => {
     await clientMain()
 }).catch((error: any) => {
     console.log("ERROR", error)
